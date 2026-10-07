@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; media-src data: blob:; base-uri 'none'; form-action 'none'">
+<meta charset="utf-8">
+<title>PetYield</title>
+<style>
+  * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+  body { margin:0; width:1280px; height:720px; background:linear-gradient(180deg,#1b1033,#241847); color:#f1eefc; overflow:hidden; }
+  header { padding:22px 40px 10px; }
+  h1 { margin:0; font-size:30px; color:#ffd166; }
+  .tag { margin:4px 0 0; color:#c8bdf0; font-size:15px; }
+  .wrap { display:flex; gap:26px; padding:10px 40px; }
+  .card { background:#2d1f55; border-radius:16px; padding:24px; width:420px; box-shadow:0 4px 14px rgba(0,0,0,.3); }
+  .pet-img { width:140px; height:140px; margin:0 auto 14px; border-radius:50%; background:#ffd166; display:flex; align-items:center; justify-content:center; font-size:60px; }
+  .stat-row { display:flex; justify-content:space-between; margin:8px 0; font-size:15px; }
+  .stat-row span:first-child { color:#b4a6e0; }
+  .badge { display:inline-block; background:#ff6b6b; color:#fff; padding:3px 10px; border-radius:10px; font-size:12px; margin-left:8px; }
+  .wallet { font-size:22px; color:#9effa5; font-weight:bold; margin-top:10px; }
+  button { background:#7c5cff; color:#fff; border:none; padding:12px 18px; border-radius:10px; font-size:15px; cursor:pointer; margin:6px 6px 0 0; }
+  button:hover { background:#9076ff; }
+  .msg { min-height:22px; margin-top:12px; font-size:14px; color:#ffd166; }
+  .side { width:420px; }
+  .hidden { display:none; }
+  .new-pet { background:#1f2d55; border:2px dashed #7c5cff; border-radius:14px; padding:18px; margin-top:16px; text-align:center; }
+  footer { position:absolute; bottom:8px; left:40px; font-size:12px; color:#8a7fc0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 data-demo="title">🐾 PetYield</h1>
+  <p class="tag">Raise NFT pets that passively earn tokens through daily mini-games</p>
+</header>
+
+<div class="wrap">
+  <div class="card" data-demo="pet-card">
+    <div class="pet-img">🐸</div>
+    <div class="stat-row"><span>Pet Name</span><span>Froggo #042</span></div>
+    <div class="stat-row"><span>Level</span><span data-demo="level-val">3</span></div>
+    <div class="stat-row"><span>Base Yield</span><span data-demo="baseyield-val">0.5 PYT/hr</span></div>
+    <div class="stat-row"><span>Multiplier</span><span data-demo="mult-val">x1 <span class="badge hidden" data-demo="boost-badge">BOOST x2</span></span></div>
+    <div class="stat-row"><span>Pending Rewards</span><span data-demo="pending-val">8.2 PYT</span></div>
+
+    <button data-demo="btn-minigame">🎮 Play Mini-Game</button>
+    <button data-demo="btn-claim">💰 Claim Rewards</button>
+    <button data-demo="btn-levelup">⬆️ Level Up</button>
+    <button data-demo="btn-breed">🧬 Breed Pets</button>
+
+    <div class="msg" data-demo="msg"></div>
+  </div>
+
+  <div class="side">
+    <div class="card" data-demo="wallet-card">
+      <div class="stat-row"><span>Wallet Balance</span><span></span></div>
+      <div class="wallet" data-demo="wallet-val">120.50 PYT</div>
+      <div class="stat-row" style="margin-top:18px;"><span>Traits Unlocked</span><span data-demo="traits-val">Green Skin</span></div>
+    </div>
+
+    <div class="new-pet hidden" data-demo="breed-panel">
+      <div style="font-size:40px;">🥚➡️🐣</div>
+      <div style="font-weight:bold; margin-top:6px;">New Pet NFT Minted!</div>
+      <div style="font-size:13px; color:#c8bdf0; margin-top:4px;">Hoppette #099 — inherited traits: Green Skin, Fast Tap</div>
+    </div>
+  </div>
+</div>
+
+<footer>Prototype — all data is simulated</footer>
+
+<script>
+  let level = 3, baseYield = 0.5, mult = 1, pending = 8.2, wallet = 120.50;
+
+  function setMsg(t){ document.querySelector('[data-demo="msg"]').textContent = t; }
+
+  document.querySelector('[data-demo="btn-minigame"]').onclick = function(){
+    mult = 2;
+    document.querySelector('[data-demo="mult-val"]').childNodes[0].nodeValue = "x2 ";
+    document.querySelector('[data-demo="boost-badge"]').classList.remove('hidden');
+    pending += 3.4;
+    document.querySelector('[data-demo="pending-val"]').textContent = pending.toFixed(1) + " PYT";
+    setMsg("Mini-game complete! Yield multiplier boosted to x2 for 24h.");
+  };
+
+  document.querySelector('[data-demo="btn-claim"]').onclick = function(){
+    wallet += pending;
+    document.querySelector('[data-demo="wallet-val"]').textContent = wallet.toFixed(2) + " PYT";
+    setMsg("Claimed " + pending.toFixed(1) + " PYT to your wallet!");
+    pending = 0;
+    document.querySelector('[data-demo="pending-val"]').textContent = "0.0 PYT";
+  };
+
+  document.querySelector('[data-demo="btn-levelup"]').onclick = function(){
+    level += 1;
+    baseYield += 0.2;
+    document.querySelector('[data-demo="level-val"]').textContent = level;
+    document.querySelector('[data-demo="baseyield-val"]').textContent = baseYield.toFixed(1) + " PYT/hr";
+    document.querySelector('[data-demo="traits-val"]').textContent = "Green Skin, Golden Aura";
+    setMsg("Level Up! New base yield: " + baseYield.toFixed(1) + " PYT/hr. Trait unlocked!");
+  };
+
+  document.querySelector('[data-demo="btn-breed"]').onclick = function(){
+    document.querySelector('[data-demo="breed-panel"]').classList.remove('hidden');
+    setMsg("Two pets bred successfully — new NFT created!");
+  };
+</script>
+</body>
+</html>
